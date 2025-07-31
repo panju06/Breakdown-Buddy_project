@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin - Payments | Breakdown Buddy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Fredoka', sans-serif;
+      background-color: #f4f7fa;
+      display: flex;
+    }
+    .sidebar {
+      width: 220px;
+      background-color: #004d80;
+      color: white;
+      padding: 20px;
+      height: 100vh;
+      position: fixed;
+    }
+    .sidebar h2 {
+      font-size: 20px;
+      margin-bottom: 30px;
+    }
+    .sidebar a {
+      color: white;
+      display: block;
+      text-decoration: none;
+      margin: 15px 0;
+      font-weight: bold;
+    }
+    .sidebar a:hover {
+      text-decoration: underline;
+    }
+    .main {
+      margin-left: 220px;
+      padding: 30px;
+      width: 100%;
+    }
+    h1 {
+      color: #004d80;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background-color: #007bff;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .filter-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .btn-red { background: #dc3545; }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="index.html">Dashboard</a>
+    <a href="requests.html">Service Requests</a>
+    <a href="mechanics.html">Mechanic List</a>
+    <a href="payments.html">Payments</a>
+    <a href="#" onclick="logout()">Logout</a>
+  </div>
+
+  <div class="main">
+    <h1>Payment Management</h1>
+
+    <div class="filter-row">
+      <select id="filterStatus">
+        <option value="">All Status</option>
+        <option value="Paid">Paid</option>
+        <option value="Pending">Pending</option>
+      </select>
+      <select id="filterMethod">
+        <option value="">All Methods</option>
+        <option>Cash</option>
+        <option>UPI</option>
+        <option>Card</option>
+      </select>
+      <button onclick="renderPayments()">Apply Filters</button>
+    </div>
+
+    <form id="paymentForm">
+      <div class="form-group">
+        <label>Service Request ID</label>
+        <input type="text" id="requestId" required />
+      </div>
+      <div class="form-group">
+        <label>Amount</label>
+        <input type="number" id="amount" required />
+      </div>
+      <div class="form-group">
+        <label>Payment Method</label>
+        <select id="method" required>
+          <option>Cash</option>
+          <option>UPI</option>
+          <option>Card</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="status">
+          <option>Paid</option>
+          <option>Pending</option>
+        </select>
+      </div>
+      <button type="submit">Add Payment</button>
+    </form>
+
+    <h2 style="margin-top: 40px;">Payment Records</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Request ID</th>
+          <th>Amount</th>
+          <th>Method</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="paymentTableBody"></tbody>
+    </table>
+  </div>
+
+  <script>
+    let payments = JSON.parse(localStorage.getItem("payments")) || [];
+
+    document.getElementById("paymentForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const payment = {
+        id: Date.now(),
+        requestId: document.getElementById("requestId").value,
+        amount: document.getElementById("amount").value,
+        method: document.getElementById("method").value,
+        status: document.getElementById("status").value,
+        date: new Date().toLocaleDateString()
+      };
+
+      payments.push(payment);
+      localStorage.setItem("payments", JSON.stringify(payments));
+      this.reset();
+      renderPayments();
+    });
+
+    function deletePayment(id) {
+      payments = payments.filter(p => p.id !== id);
+      localStorage.setItem("payments", JSON.stringify(payments));
+      renderPayments();
+    }
+
+    function renderPayments() {
+      const tbody = document.getElementById("paymentTableBody");
+      const status = document.getElementById("filterStatus").value;
+      const method = document.getElementById("filterMethod").value;
+
+      let filtered = payments;
+      if (status) filtered = filtered.filter(p => p.status === status);
+      if (method) filtered = filtered.filter(p => p.method === method);
+
+      tbody.innerHTML = "";
+      filtered.forEach((p, i) => {
+        const row = `<tr>
+          <td>${i + 1}</td>
+          <td>${p.requestId}</td>
+          <td>${p.amount}</td>
+          <td>${p.method}</td>
+          <td>${p.status}</td>
+          <td>${p.date}</td>
+          <td><button class="btn-red" onclick="deletePayment(${p.id})">Delete</button></td>
+        </tr>`;
+        tbody.innerHTML += row;
+      });
+    }
+
+    function logout() {
+      localStorage.removeItem("isAdminLoggedIn");
+      window.location.href = "login.html";
+    }
+
+    renderPayments();
+  </script>
+</body>
+</html>
