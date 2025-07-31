@@ -106,14 +106,17 @@
       <label for="vehicleModel">Vehicle Model</label>
       <input type="text" id="vehicleModel" name="vehicleModel" required />
 
-      <label for="registrationNumber">Vehicle Registration Number</label>
-      <input type="text" id="registrationNumber" name="registrationNumber" required />
+      <label for="vehicleName">Vehicle Name</label>
+      <input type="text" id="vehicleName" name="vehicleName" required />
+
+      <label for="regNumber">Vehicle Registration Number</label>
+      <input type="text" id="regNumber" name="regNumber" required />
 
       <label for="requestType">Request Type</label>
       <select id="requestType" name="requestType" required>
         <option value="">--Select--</option>
         <option>Pickup</option>
-        <option>Drop-off</option>
+        <option>Drop-Off</option>
       </select>
 
       <label for="service">Service Required</label>
@@ -127,7 +130,10 @@
         <option>Water Wash</option>
       </select>
 
-      <label for="location">Address / Pickup Location</label>
+      <label for="address">Address</label>
+      <textarea id="address" name="address" rows="3" required></textarea>
+
+      <label for="location">Pickup Location</label>
       <textarea id="location" name="location" rows="3" required></textarea>
 
       <label for="date">Preferred Date</label>
@@ -152,13 +158,15 @@
         email: document.getElementById("email").value,
         vehicle: document.getElementById("vehicle").value,
         vehicleModel: document.getElementById("vehicleModel").value,
-        registrationNumber: document.getElementById("registrationNumber").value,
+        vehicleName: document.getElementById("vehicleName").value,
+        regNumber: document.getElementById("regNumber").value,
         requestType: document.getElementById("requestType").value,
         service: document.getElementById("service").value,
+        address: document.getElementById("address").value,
         location: document.getElementById("location").value,
         date: document.getElementById("date").value,
         status: "Pending",
-        assignedMechanic: "" // for future assignment
+        mechanic: ""
       };
 
       let requests = JSON.parse(localStorage.getItem("serviceRequests")) || [];
