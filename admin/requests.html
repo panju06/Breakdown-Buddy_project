@@ -5,143 +5,69 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Service Requests - Admin</title>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka&display=swap" rel="stylesheet"/>
-  <script>
-    if (localStorage.getItem("isAdminLoggedIn") !== "true") {
-      window.location.href = "login.html";
-    }
-  </script>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Fredoka', sans-serif;
-    }
-
     body {
-      display: flex;
-      background-color: #f4f7fa;
-      min-height: 100vh;
+      font-family: 'Fredoka', sans-serif;
+      margin: 0;
+      background: #f4f7fa;
     }
-
-    .sidebar {
-      width: 220px;
-      background-color: #004d80;
-      color: #fff;
+    .container {
       padding: 20px;
-      height: 100vh;
-      position: fixed;
-    }
-
-    .sidebar h2 {
-      margin-bottom: 30px;
-      font-size: 22px;
-    }
-
-    .sidebar a {
-      display: block;
-      color: #fff;
-      text-decoration: none;
-      margin: 15px 0;
-      font-weight: bold;
-    }
-
-    .sidebar a:hover {
-      text-decoration: underline;
-    }
-
-    .main-content {
       margin-left: 220px;
-      padding: 30px;
-      width: 100%;
     }
-
-    h1 {
+    h2 {
       color: #004d80;
       margin-bottom: 20px;
     }
-
     table {
       width: 100%;
       border-collapse: collapse;
-      background: white;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      background: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
-
     th, td {
       padding: 12px;
-      border-bottom: 1px solid #ddd;
-      text-align: left;
+      border: 1px solid #ddd;
     }
-
     th {
-      background-color: #007bff;
-      color: white;
+      background: #007bff;
+      color: #fff;
     }
-
     tr:nth-child(even) {
-      background-color: #f2f2f2;
+      background: #f9f9f9;
     }
-
     button {
-      padding: 6px 12px;
-      background: #28a745;
-      color: white;
+      padding: 6px 10px;
       border: none;
-      border-radius: 4px;
       cursor: pointer;
+      border-radius: 5px;
+      color: white;
     }
-
-    .reject {
-      background-color: #dc3545;
-    }
-
-    select {
-      padding: 6px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-    }
-
-    .filter-box {
-      margin-bottom: 20px;
-    }
+    .approve { background: #28a745; }
+    .reject { background: #dc3545; }
   </style>
 </head>
 <body>
 
-  <div class="sidebar">
-    <h2>Admin Panel</h2>
-    <a href="index.html">Dashboard</a>
-    <a href="requests.html">Service Requests</a>
-    <a href="#" onclick="logout()">Logout</a>
-  </div>
-
-  <div class="main-content">
-    <h1>Service Requests</h1>
-
-    <div class="filter-box">
-      <label for="filterStatus"><strong>Filter:</strong></label>
-      <select id="filterStatus" onchange="renderRequests()">
-        <option value="all">All Requests</option>
-        <option value="pending">Pending Only</option>
-        <option value="assigned">Assigned Only</option>
-        <option value="approved">Approved Only</option>
-        <option value="rejected">Rejected Only</option>
-      </select>
-    </div>
-
+  <div class="container">
+    <h2>Service Requests</h2>
     <table>
       <thead>
         <tr>
           <th>#</th>
           <th>Name</th>
-          <th>Vehicle</th>
+          <th>Phone</th>
+          <th>Vehicle Type</th>
+          <th>Vehicle Name</th>
+          <th>Model</th>
+          <th>Reg. Number</th>
+          <th>Request Type</th>
           <th>Service</th>
+          <th>Email</th>
+          <th>Address</th>
+          <th>Location</th>
           <th>Date</th>
           <th>Status</th>
-          <th>Mechanic</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -150,81 +76,48 @@
   </div>
 
   <script>
-    function logout() {
-      localStorage.removeItem("isAdminLoggedIn");
-      window.location.href = "login.html";
-    }
-
     let requests = JSON.parse(localStorage.getItem("serviceRequests")) || [];
-    let mechanics = JSON.parse(localStorage.getItem("mechanics")) || [];
 
-    const requestBody = document.getElementById("requestTableBody");
+    function renderTable() {
+      const tbody = document.getElementById("requestTableBody");
+      tbody.innerHTML = "";
 
-    function renderRequests() {
-      const filter = document.getElementById("filterStatus").value;
-      requestBody.innerHTML = "";
-
-      let filteredRequests = [...requests];
-
-      if (filter === "pending") {
-        filteredRequests = filteredRequests.filter(r => r.status === "Pending");
-      } else if (filter === "assigned") {
-        filteredRequests = filteredRequests.filter(r => r.mechanic && r.mechanic !== "");
-      } else if (filter === "approved") {
-        filteredRequests = filteredRequests.filter(r => r.status === "Approved");
-      } else if (filter === "rejected") {
-        filteredRequests = filteredRequests.filter(r => r.status === "Rejected");
-      }
-
-      filteredRequests.forEach((req, i) => {
+      requests.forEach((req, index) => {
         const row = document.createElement("tr");
-
-        const mechanicOptions = mechanics.map(m =>
-          `<option value="${m.name}" ${req.mechanic === m.name ? "selected" : ""}>${m.name}</option>`
-        ).join("");
-
         row.innerHTML = `
-          <td>${i + 1}</td>
+          <td>${index + 1}</td>
           <td>${req.name}</td>
+          <td>${req.phone}</td>
           <td>${req.vehicle}</td>
+          <td>${req.vehicleName || ""}</td>
+          <td>${req.vehicleModel || ""}</td>
+          <td>${req.registrationNumber || ""}</td>
+          <td>${req.requestType || ""}</td>
           <td>${req.service}</td>
+          <td>${req.email || ""}</td>
+          <td>${req.address || ""}</td>
+          <td>${req.location}</td>
           <td>${req.date}</td>
           <td>${req.status}</td>
           <td>
-            <select onchange="assignMechanic(${req.id}, this.value)">
-              <option value="">-- Assign --</option>
-              ${mechanicOptions}
-            </select>
-          </td>
-          <td>
-            <button onclick="updateStatus(${req.id}, 'Approved')">Approve</button>
+            <button class="approve" onclick="updateStatus(${req.id}, 'Approved')">Approve</button>
             <button class="reject" onclick="updateStatus(${req.id}, 'Rejected')">Reject</button>
           </td>
         `;
-
-        requestBody.appendChild(row);
+        tbody.appendChild(row);
       });
-    }
-
-    function assignMechanic(id, mechanicName) {
-      requests = requests.map(req => {
-        if (req.id === id) req.mechanic = mechanicName;
-        return req;
-      });
-      localStorage.setItem("serviceRequests", JSON.stringify(requests));
-      renderRequests();
     }
 
     function updateStatus(id, newStatus) {
-      requests = requests.map(req => {
-        if (req.id === id) req.status = newStatus;
-        return req;
+      requests = requests.map(r => {
+        if (r.id === id) r.status = newStatus;
+        return r;
       });
       localStorage.setItem("serviceRequests", JSON.stringify(requests));
-      renderRequests();
+      renderTable();
     }
 
-    renderRequests();
+    renderTable();
   </script>
 
 </body>
