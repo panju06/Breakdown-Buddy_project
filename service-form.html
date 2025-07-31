@@ -19,7 +19,7 @@
     }
 
     .form-container {
-      max-width: 600px;
+      max-width: 700px;
       margin: 30px auto;
       background: white;
       padding: 30px;
@@ -91,6 +91,9 @@
       <label for="phone">Phone Number</label>
       <input type="tel" id="phone" name="phone" required />
 
+      <label for="email">Email ID</label>
+      <input type="email" id="email" name="email" required />
+
       <label for="vehicle">Vehicle Type</label>
       <select id="vehicle" name="vehicle" required>
         <option value="">--Select--</option>
@@ -98,6 +101,19 @@
         <option>3 Wheeler</option>
         <option>4 Wheeler</option>
         <option>6 Wheeler</option>
+      </select>
+
+      <label for="vehicleModel">Vehicle Model</label>
+      <input type="text" id="vehicleModel" name="vehicleModel" required />
+
+      <label for="registrationNumber">Vehicle Registration Number</label>
+      <input type="text" id="registrationNumber" name="registrationNumber" required />
+
+      <label for="requestType">Request Type</label>
+      <select id="requestType" name="requestType" required>
+        <option value="">--Select--</option>
+        <option>Pickup</option>
+        <option>Drop-off</option>
       </select>
 
       <label for="service">Service Required</label>
@@ -111,7 +127,7 @@
         <option>Water Wash</option>
       </select>
 
-      <label for="location">Pickup Location</label>
+      <label for="location">Address / Pickup Location</label>
       <textarea id="location" name="location" rows="3" required></textarea>
 
       <label for="date">Preferred Date</label>
@@ -129,22 +145,20 @@
     document.getElementById("serviceForm").addEventListener("submit", function(e) {
       e.preventDefault();
 
-      const name = document.getElementById("name").value;
-      const phone = document.getElementById("phone").value;
-      const vehicle = document.getElementById("vehicle").value;
-      const service = document.getElementById("service").value;
-      const location = document.getElementById("location").value;
-      const date = document.getElementById("date").value;
-
       const request = {
         id: Date.now(),
-        name,
-        phone,
-        vehicle,
-        service,
-        location,
-        date,
-        status: "Pending"
+        name: document.getElementById("name").value,
+        phone: document.getElementById("phone").value,
+        email: document.getElementById("email").value,
+        vehicle: document.getElementById("vehicle").value,
+        vehicleModel: document.getElementById("vehicleModel").value,
+        registrationNumber: document.getElementById("registrationNumber").value,
+        requestType: document.getElementById("requestType").value,
+        service: document.getElementById("service").value,
+        location: document.getElementById("location").value,
+        date: document.getElementById("date").value,
+        status: "Pending",
+        assignedMechanic: "" // for future assignment
       };
 
       let requests = JSON.parse(localStorage.getItem("serviceRequests")) || [];
