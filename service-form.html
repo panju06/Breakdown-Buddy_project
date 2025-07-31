@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Service Request Form - Breakdown Buddy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka&display=swap" rel="stylesheet"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    body {
+      background-color: #f4f7fa;
+      padding: 20px;
+    }
+
+    .form-container {
+      max-width: 600px;
+      margin: 30px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #004d80;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #005bb5;
+    }
+
+    .back-link {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .back-link a {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <h2>Service Request Form</h2>
+    <form id="serviceForm">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" name="name" required />
+
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" name="phone" required />
+
+      <label for="vehicle">Vehicle Type</label>
+      <select id="vehicle" name="vehicle" required>
+        <option value="">--Select--</option>
+        <option>2 Wheeler</option>
+        <option>3 Wheeler</option>
+        <option>4 Wheeler</option>
+        <option>6 Wheeler</option>
+      </select>
+
+      <label for="service">Service Required</label>
+      <select id="service" name="service" required>
+        <option value="">--Select--</option>
+        <option>Brake Service</option>
+        <option>Engine Problem</option>
+        <option>Engine Tune-Up</option>
+        <option>Overall Check-Up</option>
+        <option>Tire Replacement</option>
+        <option>Water Wash</option>
+      </select>
+
+      <label for="location">Pickup Location</label>
+      <textarea id="location" name="location" rows="3" required></textarea>
+
+      <label for="date">Preferred Date</label>
+      <input type="date" id="date" name="date" required />
+
+      <button type="submit">Submit Request</button>
+    </form>
+
+    <div class="back-link">
+      <a href="../index.html">← Back to Home</a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("serviceForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const phone = document.getElementById("phone").value;
+      const vehicle = document.getElementById("vehicle").value;
+      const service = document.getElementById("service").value;
+      const location = document.getElementById("location").value;
+      const date = document.getElementById("date").value;
+
+      const request = {
+        id: Date.now(),
+        name,
+        phone,
+        vehicle,
+        service,
+        location,
+        date,
+        status: "Pending"
+      };
+
+      let requests = JSON.parse(localStorage.getItem("serviceRequests")) || [];
+      requests.push(request);
+      localStorage.setItem("serviceRequests", JSON.stringify(requests));
+
+      alert("✅ Service request submitted successfully!");
+      document.getElementById("serviceForm").reset();
+    });
+  </script>
+
+</body>
+</html>

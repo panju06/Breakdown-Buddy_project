@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Breakdown Buddy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka&display=swap" rel="stylesheet"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    body {
+      background-color: #ffffff;
+    }
+
+    header {
+      background-color: #007bff;
+      padding: 15px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #fff;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+      font-size: 24px;
+    }
+
+    header nav a {
+      color: white;
+      margin-left: 20px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .hero {
+      background: url('1751610840_1632965760_car-shop-clip.jpg') no-repeat center center;
+      background-size: cover;
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: white;
+      text-shadow: 2px 2px 4px #000;
+    }
+
+    .hero h2 {
+      font-size: 40px;
+    }
+
+    .hero button {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+
+    .section-title {
+      text-align: center;
+      margin: 40px 0 20px;
+      font-size: 24px;
+      color: #004d80;
+    }
+
+    .services-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 0 20px;
+    }
+
+    .service-card {
+      border: 1px solid #ccc;
+      border-left: 4px solid #007bff;
+      border-radius: 6px;
+      padding: 15px;
+      width: 280px;
+      background: #ffffffcc;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .service-card h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .vehicle-types, .search-box {
+      margin: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .vehicle-card {
+      border: 1px solid #ccc;
+      padding: 15px;
+      border-radius: 8px;
+      width: 250px;
+      background-color: #ffffffcc;
+      box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .search-box input {
+      padding: 10px;
+      font-size: 16px;
+      width: 300px;
+      border: 1px solid #ccc;
+      border-radius: 5px 0 0 5px;
+    }
+
+    .search-box button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 0 5px 5px 0;
+      cursor: pointer;
+    }
+
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      padding: 15px;
+      background: #e6f2f9;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🚗 Breakdown Buddy</h1>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">About Us</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>Breakdown Buddy</h2>
+    <p>We will take care of your vehicle</p>
+    <button onclick="location.href='service-form.html'">Send Service Request</button>
+  </section>
+
+  <div class="section-title">We Do Service For:</div>
+  <div class="vehicle-types">
+    <div class="vehicle-card">2 Wheeler Vehicle (Motorcycles, Scooters, Mopeds)</div>
+    <div class="vehicle-card">3 Wheeler Vehicle (Auto Rickshaws, Goods Carriers)</div>
+    <div class="vehicle-card">4 Wheeler Vehicle (Cars, Jeep, Pickup trucks, Vans, Small buses)</div>
+    <div class="vehicle-card">6 Wheeler Vehicle (Trucks, Lorries, Mini buses)</div>
+  </div>
+
+  <div class="section-title">Our Services</div>
+  <div class="search-box">
+    <input type="text" placeholder="Search Service Here">
+    <button>🔍</button>
+  </div>
+
+  <div class="services-container">
+    <div class="service-card">
+      <h3>Brake Service</h3>
+      <p>Expert brake inspection & repair. Pads, discs, fluid checks.</p>
+    </div>
+    <div class="service-card">
+      <h3>Engine Problem</h3>
+      <p>Quick diagnosis for starting, overheating & power loss.</p>
+    </div>
+    <div class="service-card">
+      <h3>Engine Tune-Up</h3>
+      <p>Spark plugs, filters, and ignition checked by pros.</p>
+    </div>
+    <div class="service-card">
+      <h3>Overall Check-Up</h3>
+      <p>Complete health check - brakes, fluids, battery, tires.</p>
+    </div>
+    <div class="service-card">
+      <h3>Tire Replacement</h3>
+      <p>Quick tire replacement with pickup & drop-off.</p>
+    </div>
+    <div class="service-card">
+      <h3>Water Wash Service</h3>
+      <p>High-pressure cleaning for a fresh vehicle look.</p>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 Breakdown Buddy. All rights reserved.
+  </footer>
+
+</body>
+</html>

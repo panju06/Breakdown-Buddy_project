@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard - Breakdown Buddy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka&display=swap" rel="stylesheet"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    body {
+      display: flex;
+      min-height: 100vh;
+      background-color: #f4f7fa;
+    }
+
+    .sidebar {
+      width: 220px;
+      background-color: #004d80;
+      color: #fff;
+      padding: 20px;
+      height: 100vh;
+      position: fixed;
+    }
+
+    .sidebar h2 {
+      margin-bottom: 30px;
+      font-size: 22px;
+    }
+
+    .sidebar a {
+      display: block;
+      color: #fff;
+      text-decoration: none;
+      margin: 15px 0;
+      font-weight: bold;
+    }
+
+    .sidebar a:hover {
+      text-decoration: underline;
+    }
+
+    .main-content {
+      margin-left: 220px;
+      padding: 30px;
+      width: 100%;
+    }
+
+    h1 {
+      color: #004d80;
+      margin-bottom: 10px;
+    }
+
+    .summary {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .card {
+      flex: 1;
+      min-width: 150px;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      text-align: center;
+    }
+
+    .card h3 {
+      color: #007bff;
+      font-size: 24px;
+    }
+
+    .card p {
+      color: #555;
+      font-size: 14px;
+    }
+
+    h3 {
+      margin-top: 30px;
+      color: #004d80;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: #007bff;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    button {
+      padding: 6px 12px;
+      margin-right: 5px;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button.reject {
+      background: #dc3545;
+    }
+
+    select {
+      padding: 6px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+      .main-content {
+        margin-left: 0;
+        padding: 20px;
+      }
+      .summary {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="index.html">Dashboard</a>
+    <a href="requests.html">Service Requests</a>
+    <a href="mechanics.html">Mechanic List</a>
+    <a href="settings.html">Settings</a>
+    <a href="#" onclick="logout()">Logout</a>
+  </div>
+
+  <div class="main-content">
+    <h1>Welcome, Admin</h1>
+
+    <div class="summary">
+      <div class="card"><h3 id="total">0</h3><p>Total Requests</p></div>
+      <div class="card"><h3 id="pending">0</h3><p>Pending</p></div>
+      <div class="card"><h3 id="approved">0</h3><p>Approved</p></div>
+      <div class="card"><h3 id="rejected">0</h3><p>Rejected</p></div>
+    </div>
+
+    <h3>Recent Service Requests</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Vehicle</th>
+          <th>Service</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Mechanic</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="dashboardRequestBody"></tbody>
+    </table>
+  </div>
+
+  <script>
+    if (localStorage.getItem("isAdminLoggedIn") !== "true") {
+      window.location.href = "login.html";
+    }
+
+    function logout() {
+      localStorage.removeItem("isAdminLoggedIn");
+      window.location.href = "login.html";
+    }
+
+    const dashboardBody = document.getElementById("dashboardRequestBody");
+    let requests = JSON.parse(localStorage.getItem("serviceRequests")) || [];
+    const mechanics = JSON.parse(localStorage.getItem("mechanics")) || [];
+
+    function updateSummary() {
+      document.getElementById("total").textContent = requests.length;
+      document.getElementById("pending").textContent = requests.filter(r => r.status === "Pending").length;
+      document.getElementById("approved").textContent = requests.filter(r => r.status === "Approved").length;
+      document.getElementById("rejected").textContent = requests.filter(r => r.status === "Rejected").length;
+    }
+
+    function renderDashboardRequests() {
+      dashboardBody.innerHTML = "";
+      let latest = requests.slice(-5).reverse();
+
+      latest.forEach((req, index) => {
+        const row = document.createElement("tr");
+
+        const mechanicOptions = mechanics.map(
+          mech => `<option value="${mech.name}" ${req.mechanic === mech.name ? "selected" : ""}>${mech.name}</option>`
+        ).join("");
+
+        row.innerHTML = `
+          <td>${requests.length - index}</td>
+          <td>${req.name}</td>
+          <td>${req.vehicle}</td>
+          <td>${req.service}</td>
+          <td>${req.date}</td>
+          <td>${req.status}</td>
+          <td>
+            <select onchange="assignMechanic(${req.id}, this.value)">
+              <option value="">-- Assign --</option>
+              ${mechanicOptions}
+            </select>
+          </td>
+          <td>
+            <button onclick="updateStatus(${req.id}, 'Approved')">Approve</button>
+            <button class="reject" onclick="updateStatus(${req.id}, 'Rejected')">Reject</button>
+          </td>
+        `;
+        dashboardBody.appendChild(row);
+      });
+
+      updateSummary();
+    }
+
+    function updateStatus(id, newStatus) {
+      requests = requests.map(req => {
+        if (req.id === id) req.status = newStatus;
+        return req;
+      });
+      localStorage.setItem("serviceRequests", JSON.stringify(requests));
+      renderDashboardRequests();
+    }
+
+    function assignMechanic(id, mechanicName) {
+      requests = requests.map(req => {
+        if (req.id === id) req.mechanic = mechanicName;
+        return req;
+      });
+      localStorage.setItem("serviceRequests", JSON.stringify(requests));
+      renderDashboardRequests();
+    }
+
+    renderDashboardRequests();
+  </script>
+
+</body>
+</html>

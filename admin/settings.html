@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Settings - Breakdown Buddy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka&display=swap" rel="stylesheet"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    body {
+      display: flex;
+      min-height: 100vh;
+      background-color: #f4f7fa;
+    }
+
+    .sidebar {
+      width: 220px;
+      background-color: #004d80;
+      color: #fff;
+      padding: 20px;
+      height: 100vh;
+      position: fixed;
+    }
+
+    .sidebar h2 {
+      margin-bottom: 30px;
+      font-size: 22px;
+    }
+
+    .sidebar a {
+      display: block;
+      color: #fff;
+      text-decoration: none;
+      margin: 15px 0;
+      font-weight: bold;
+    }
+
+    .sidebar a:hover {
+      text-decoration: underline;
+    }
+
+    .main-content {
+      margin-left: 220px;
+      padding: 30px;
+      width: 100%;
+    }
+
+    h1 {
+      color: #004d80;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      color: #333;
+      font-weight: bold;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    button {
+      margin-top: 20px;
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+      .main-content {
+        margin-left: 0;
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="index.html">Dashboard</a>
+    <a href="requests.html">Service Requests</a>
+    <a href="mechanics.html">Mechanic List</a>
+    <a href="settings.html">Settings</a>
+    <a href="#" onclick="logout()">Logout</a>
+  </div>
+
+  <div class="main-content">
+    <h1>Update Website Information</h1>
+
+    <label for="siteTitle">Website Title</label>
+    <input type="text" id="siteTitle" placeholder="e.g., Breakdown Buddy">
+
+    <label for="heroHeading">Hero Heading</label>
+    <input type="text" id="heroHeading" placeholder="e.g., Breakdown Buddy">
+
+    <label for="heroText">Hero Subtext</label>
+    <input type="text" id="heroText" placeholder="e.g., We will take care of your vehicle">
+
+    <label for="aboutText">About Us Description</label>
+    <textarea id="aboutText" placeholder="Write about your platform..."></textarea>
+
+    <button onclick="saveSettings()">Save Settings</button>
+  </div>
+
+  <script>
+    // 🟡 Protect page from unauthorized access
+    if (localStorage.getItem("isAdminLoggedIn") !== "true") {
+      window.location.href = "login.html";
+    }
+
+    // 🔄 Load current settings
+    document.getElementById("siteTitle").value = localStorage.getItem("siteTitle") || "Breakdown Buddy";
+    document.getElementById("heroHeading").value = localStorage.getItem("heroHeading") || "Breakdown Buddy";
+    document.getElementById("heroText").value = localStorage.getItem("heroText") || "We will take care of your vehicle";
+    document.getElementById("aboutText").value = localStorage.getItem("aboutText") || "";
+
+    function saveSettings() {
+      localStorage.setItem("siteTitle", document.getElementById("siteTitle").value);
+      localStorage.setItem("heroHeading", document.getElementById("heroHeading").value);
+      localStorage.setItem("heroText", document.getElementById("heroText").value);
+      localStorage.setItem("aboutText", document.getElementById("aboutText").value);
+      alert("✅ Settings saved successfully!");
+    }
+
+    function logout() {
+      localStorage.removeItem("isAdminLoggedIn");
+      window.location.href = "login.html";
+    }
+  </script>
+
+</body>
+</html>
